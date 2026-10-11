@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinSmart Student - Malaysian Student Finance Platform</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            800: '#0F172A',
+                            900: '#0B0F19',
+                        },
+                        teal: {
+                            500: '#0D9488',
+                            600: '#0F766E',
+                            700: '#115E59',
+                            400: '#14B8A6',
+                            50: '#F0FDFA',
+                            100: '#CCFBF1'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        /* Custom scrollbar for chat and tables */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Feature 1: Dashboard Header & Navigation -->
+    <header class="bg-navy-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- App Logo & Tagline -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-teal-500 text-white p-2 rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fa-solid fa-wallet text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-lg font-bold tracking-tight text-white">FinSmart <span class="text-teal-400">Student</span></span>
+                        <span class="block text-[10px] text-slate-400 tracking-wider uppercase font-medium">Malaysia Edition (RM)</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex space-x-1 lg:space-x-2">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-teal-600 text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-chart-pie"></i><span>Dashboard</span>
+                    </button>
+                    <button onclick="switchTab('scanner')" id="nav-scanner" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-colors text-slate-300 hover:bg-slate-800 hover:text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-receipt"></i><span>Receipt Scanner</span>
+                    </button>
+                    <button onclick="switchTab('discounts')" id="nav-discounts" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-colors text-slate-300 hover:bg-slate-800 hover:text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-tags"></i><span>Perks & Goals</span>
+                    </button>
+                    <button onclick="switchTab('waitthink')" id="nav-waitthink" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-colors text-slate-300 hover:bg-slate-800 hover:text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-shield-halved"></i><span>Wait & Think</span>
+                    </button>
+                    <button onclick="switchTab('advisor')" id="nav-advisor" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-colors text-slate-300 hover:bg-slate-800 hover:text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-robot"></i><span>AI Advisor</span>
+                    </button>
+                </nav>
+
+                <!-- User Profile badge -->
+                <div class="flex items-center space-x-3">
+                    <div class="hidden sm:block text-right">
+                        <div class="text-sm font-semibold text-white">Aiman</div>
+                        <div class="text-xs text-teal-400">Universiti Malaya (UM)</div>
+                    </div>
+                    <div class="h-10 w-10 rounded-full bg-teal-600 flex items-center text-white font-bold text-sm shadow ring-2 ring-teal-500/50 flex items-center justify-center">
+                        AI
+                    </div>
+                    <!-- Mobile menu button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden text-slate-300 hover:text-white p-2 focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-navy-800 border-t border-slate-800 px-4 pt-2 pb-4 space-y-1">
+            <button onclick="switchTab('dashboard'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white bg-teal-600 flex items-center space-x-3">
+                <i class="fa-solid fa-chart-pie w-5"></i><span>Dashboard</span>
+            </button>
+            <button onclick="switchTab('scanner'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white flex items-center space-x-3">
+                <i class="fa-solid fa-receipt w-5"></i><span>Receipt Scanner</span>
+            </button>
+            <button onclick="switchTab('discounts'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white flex items-center space-x-3">
+                <i class="fa-solid fa-tags w-5"></i><span>Perks & Savings Goals</span>
+            </button>
+            <button onclick="switchTab('waitthink'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white flex items-center space-x-3">
+                <i class="fa-solid fa-shield-halved w-5"></i><span>Wait & Think Tool</span>
+            </button>
+            <button onclick="switchTab('advisor'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white flex items-center space-x-3">
+                <i class="fa-solid fa-robot w-5"></i><span>AI Advisor Chat</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ================= TAB 1: DASHBOARD & EXPENSE OVERVIEW ================= -->
+        <div id="tab-dashboard" class="tab-content active space-y-6">
+            <!-- Greeting & Quick Stats Header -->
+            <div class="bg-gradient-to-r from-navy-900 to-teal-800 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                <div class="absolute right-0 bottom-0 opacity-10 translate-x-4 translate-y-4">
+                    <i class="fa-solid fa-graduation-cap text-9xl"></i>
+                </div>
+                <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <span class="bg-teal-500/30 text-teal-300 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">Semester 2 • 2026</span>
+                        <h1 class="text-2xl sm:text-3xl font-bold mt-2">Selamat Datang, Aiman! 👋</h1>
+                        <p class="text-slate-300 text-sm mt-1">Here is your financial overview for October. You are managing your budget well!</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="openAddTransactionModal()" class="bg-teal-500 hover:bg-teal-600 text-white font-medium px-4 py-2.5 rounded-xl text-sm transition-all shadow-md flex items-center space-x-2">
+                            <i class="fa-solid fa-plus"></i><span>Add Expense</span>
+                        </button>
+                        <button onclick="switchTab('scanner')" class="bg-white/10 hover:bg-white/20 text-white font-medium px-4 py-2.5 rounded-xl text-sm transition-all backdrop-blur-sm border border-white/10 flex items-center space-x-2">
+                            <i class="fa-solid fa-camera"></i><span>Scan Receipt</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2: Budget & Expense Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <!-- Monthly Allowance Card -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-slate-500">Monthly Allowance</span>
+                        <div class="h-10 w-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-baseline justify-between">
+                        <span id="stat-allowance" class="text-2xl sm:text-3xl font-bold text-slate-900">RM 600.00</span>
+                        <span class="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full"><i class="fa-solid fa-arrow-up text-[10px] mr-1"></i>PTPTN / Parents</span>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500 flex justify-between">
+                        <span>Prorated daily:</span>
+                        <span class="font-semibold text-slate-700">RM 20.00 / day</span>
+                    </div>
+                </div>
+
+                <!-- Total Spent Card -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-slate-500">Total Spent</span>
+                        <div class="h-10 w-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-baseline justify-between">
+                        <span id="stat-spent" class="text-2xl sm:text-3xl font-bold text-slate-900">RM 385.50</span>
+                        <span id="stat-spent-percent" class="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">64.3% spent</span>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2">
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div id="spent-progress-bar" class="bg-amber-500 h-2 rounded-full" style="width: 64.3%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Remaining Budget Card -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-slate-500">Remaining Budget</span>
+                        <div class="h-10 w-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-piggy-bank"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-baseline justify-between">
+                        <span id="stat-remaining" class="text-2xl sm:text-3xl font-bold text-teal-600">RM 214.50</span>
+                        <span id="stat-remaining-badge" class="text-xs font-medium text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">On Track 🟢</span>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500 flex justify-between">
+                        <span>Estimated days left:</span>
+                        <span class="font-semibold text-slate-700">12 Days</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions Log -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Recent Transactions</h2>
+                        <p class="text-xs text-slate-500">Tracked via receipt scans & manual entries</p>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <div class="relative flex-grow sm:flex-grow-0">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-search text-xs"></i>
+                            </span>
+                            <input type="text" id="transaction-search" oninput="filterTransactions()" placeholder="Search transactions..." class="pl-9 pr-4 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 w-full sm:w-64">
+                        </div>
+                        <button onclick="openAddTransactionModal()" class="bg-teal-50 hover:bg-teal-100 text-teal-700 font-medium px-3 py-1.5 rounded-xl text-sm transition-all flex items-center space-x-1 whitespace-nowrap">
+                            <i class="fa-solid fa-plus text-xs"></i><span>Add</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Transaction List Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-100 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                                <th class="pb-3 px-3">Description</th>
+                                <th class="pb-3 px-3">Category</th>
+                                <th class="pb-3 px-3">Date</th>
+                                <th class="pb-3 px-3 text-right">Amount (RM)</th>
+                                <th class="pb-3 px-3 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaction-table-body" class="divide-y divide-slate-100 text-sm">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 2: AI RECEIPT SCANNER ================= -->
+        <div id="tab-scanner" class="tab-content space-y-6">
+            <!-- Feature 3: AI Receipt Scanner UI -->
+            <div class="bg-gradient-to-r from-navy-900 to-teal-900 text-white rounded-2xl p-6 shadow-xl">
+                <span class="bg-teal-500/30 text-teal-300 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">OCR Automation</span>
+                <h2 class="text-2xl font-bold mt-2">AI Receipt Scanner 🧾</h2>
+                <p class="text-slate-300 text-sm mt-1">Upload a photo of your meal at the mamak, bookstore stationary receipt, or LRT reload slip. Our AI will automatically extract items and categorize expenses!</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Upload & OCR Trigger Area -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-900 mb-1">Upload Receipt Image</h3>
+                        <p class="text-xs text-slate-500 mb-4">Supports PNG, JPG up to 10MB</p>
+
+                        <!-- Drag and Drop Zone -->
+                        <div id="drop-zone" class="border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center hover:border-teal-500 transition-all cursor-pointer bg-slate-50 relative group">
+                            <input type="file" id="receipt-file-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" onchange="handleFileSelect(event)">
+                            <div class="w-14 h-14 bg-teal-50 text-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-105 transition-transform">
+                                <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
+                            </div>
+                            <p class="font-medium text-slate-700 text-sm">Drag and drop your receipt here, or <span class="text-teal-600 underline">browse files</span></p>
+                            <p class="text-xs text-slate-400 mt-1">Automatic item parsing & categorization</p>
+                        </div>
+
+                        <!-- Sample Quick-Scan Buttons -->
+                        <div class="mt-4">
+                            <span class="text-xs font-medium text-slate-500 block mb-2">Or test with sample Malaysian receipts:</span>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="loadSampleReceipt('mamak')" class="p-2.5 text-xs font-medium bg-slate-100 hover:bg-teal-50 hover:text-teal-700 hover:border-teal-300 border border-slate-200 rounded-xl transition-all text-left flex items-center space-x-2">
+                                    <i class="fa-solid fa-utensils text-teal-600"></i>
+                                    <span class="truncate">Mamak Stall</span>
+                                </button>
+                                <button onclick="loadSampleReceipt('bookstore')" class="p-2.5 text-xs font-medium bg-slate-100 hover:bg-teal-50 hover:text-teal-700 hover:border-teal-300 border border-slate-200 rounded-xl transition-all text-left flex items-center space-x-2">
+                                    <i class="fa-solid fa-book text-teal-600"></i>
+                                    <span class="truncate">Campus Coop</span>
+                                </button>
+                                <button onclick="loadSampleReceipt('transport')" class="p-2.5 text-xs font-medium bg-slate-100 hover:bg-teal-50 hover:text-teal-700 hover:border-teal-300 border border-slate-200 rounded-xl transition-all text-left flex items-center space-x-2">
+                                    <i class="fa-solid fa-train text-teal-600"></i>
+                                    <span class="truncate">RapidKL Pass</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OCR Progress Loader -->
+                    <div id="ocr-loader" class="hidden mt-6 bg-teal-50 border border-teal-200 rounded-xl p-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="animate-spin text-teal-600">
+                                <i class="fa-solid fa-circle-notch text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-teal-900" id="ocr-status-text">Scanning receipt via AI OCR...</h4>
+                                <p class="text-[11px] text-teal-700">Extracting merchant name, items, and totals in RM</p>
+                            </div>
+                        </div>
+                        <div class="w-full bg-teal-200 rounded-full h-1.5 mt-3 overflow-hidden">
+                            <div id="ocr-progress-bar" class="bg-teal-600 h-1.5 rounded-full transition-all duration-500" style="width: 30%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Processed Output Box -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-slate-900">Extracted OCR Output</h3>
+                            <span id="ocr-badge" class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Ready to Save</span>
+                        </div>
+
+                        <!-- Processed Details Box -->
+                        <div id="ocr-output-card" class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+                            <div class="flex justify-between items-center pb-3 border-b border-slate-200">
+                                <div>
+                                    <span class="text-xs text-slate-400 block">Detected Merchant</span>
+                                    <span id="ocr-merchant" class="font-bold text-slate-800 text-sm">Ali Nasi Kandar Bistari</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-xs text-slate-400 block">Total Amount</span>
+                                    <span id="ocr-total" class="font-bold text-teal-600 text-base">RM 8.50</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <span class="text-xs text-slate-500 font-semibold block mb-2">Extracted Line Items:</span>
+                                <div id="ocr-items-list" class="space-y-1.5 text-xs text-slate-700">
+                                    <div class="flex justify-between bg-white p-2 rounded border border-slate-100">
+                                        <span>Nasi Lemak Ayam Goreng</span>
+                                        <span class="font-medium">RM 7.00</span>
+                                    </div>
+                                    <div class="flex justify-between bg-white p-2 rounded border border-slate-100">
+                                        <span>Teh Tarik Ais</span>
+                                        <span class="font-medium">RM 1.50</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-2 flex items-center justify-between text-xs text-slate-500">
+                                <span>Auto-Category: <strong class="text-teal-700 bg-teal-50 px-2 py-0.5 rounded" id="ocr-category">Food & Dining</strong></span>
+                                <span>Date: <span id="ocr-date">Today, 1:15 PM</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <button onclick="commitScannedExpense()" id="commit-ocr-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-2.5 rounded-xl text-sm transition-all shadow-md flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-check"></i><span>Confirm & Add to Expenses</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 3: STUDENT DISCOUNTS & SAVINGS GOALS ================= -->
+        <div id="tab-discounts" class="tab-content space-y-6">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-teal-800 to-navy-900 text-white rounded-2xl p-6 shadow-xl">
+                <span class="bg-teal-500/30 text-teal-300 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">Student Perks & Goals</span>
+                <h2 class="text-2xl font-bold mt-2">Malaysian Student Discounts & Savings 🎯</h2>
+                <p class="text-slate-300 text-sm mt-1">Make your allowance stretch further with verified local student perks and fund your personal milestones.</p>
+            </div>
+
+            <!-- Feature 4a: Student Discount Finder Cards -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-slate-900 text-lg">Verified Local Student Perks</h3>
+                    <span class="text-xs text-slate-500">Showing offers around Klang Valley / UM</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <!-- Discount Card 1 -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex flex-col justify-between hover:shadow-md transition-shadow">
+                        <div>
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-train"></i>
+                                </div>
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2 py-0.5 rounded-full">50% OFF</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-base">RapidKL Concession Pass</h4>
+                            <p class="text-xs text-slate-500 mt-1">Unlimited monthly rides on LRT, MRT, Monorail and RapidKL buses for Malaysian students with MyKad.</p>
+                        </div>
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-xs font-medium text-slate-400">Save ~RM100/mo</span>
+                            <button onclick="claimPerk('RapidKL Concession')" class="bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 text-xs font-medium px-3 py-1.5 rounded-xl transition-all">
+                                Claim Perk
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Discount Card 2 -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex flex-col justify-between hover:shadow-md transition-shadow">
+                        <div>
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-mug-hot"></i>
+                                </div>
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2 py-0.5 rounded-full">20% OFF</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-base">Tealive Student Deal</h4>
+                            <p class="text-xs text-slate-500 mt-1">Show your student ID card (UM/UiTM/etc.) at any Tealive outlet across Malaysia to enjoy 20% off drinks.</p>
+                        </div>
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-xs font-medium text-slate-400">All Outlets</span>
+                            <button onclick="claimPerk('Tealive Student Deal')" class="bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 text-xs font-medium px-3 py-1.5 rounded-xl transition-all">
+                                Claim Perk
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Discount Card 3 -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex flex-col justify-between hover:shadow-md transition-shadow">
+                        <div>
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-book-open"></i>
+                                </div>
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2 py-0.5 rounded-full">15% OFF</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-base">Campus Bookstore & Printing</h4>
+                            <p class="text-xs text-slate-500 mt-1">Special discount on textbooks, stationaries, thesis binding and laser printing services at campus cooperative.</p>
+                        </div>
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-xs font-medium text-slate-400">Coop Store</span>
+                            <button onclick="claimPerk('Campus Bookstore')" class="bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 text-xs font-medium px-3 py-1.5 rounded-xl transition-all">
+                                Claim Perk
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 4b: Active Savings Goals -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-lg">Active Savings Goals</h3>
+                        <p class="text-xs text-slate-500">Put aside leftover allowance for your future needs</p>
+                    </div>
+                    <button onclick="openAddGoalModal()" class="bg-teal-50 hover:bg-teal-100 text-teal-700 font-medium px-3 py-1.5 rounded-xl text-sm transition-all flex items-center space-x-1">
+                        <i class="fa-solid fa-plus text-xs"></i><span>New Goal</span>
+                    </button>
+                </div>
+
+                <div id="savings-goals-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- Goal 1 -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 relative overflow-hidden">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-medium text-teal-600 bg-teal-50 px-2.5 py-0.5 rounded-full">Technology</span>
+                                <h4 class="font-bold text-slate-900 text-base mt-1">New Laptop Battery & SSD</h4>
+                            </div>
+                            <span class="font-bold text-teal-600 text-sm">RM 350 / RM 500</span>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex justify-between text-xs text-slate-500 mb-1">
+                                <span>Progress</span>
+                                <span class="font-semibold text-slate-700">70%</span>
+                            </div>
+                            <div class="w-full bg-slate-200 rounded-full h-2">
+                                <div class="bg-teal-600 h-2 rounded-full" style="width: 70%"></div>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-200 flex justify-between items-center">
+                            <span class="text-xs text-slate-400">Target: Nov 2026</span>
+                            <button onclick="addGoalFunds('Laptop Battery', 50)" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-all flex items-center space-x-1">
+                                <i class="fa-solid fa-plus text-[10px]"></i><span>Add RM 50</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Goal 2 -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 relative overflow-hidden">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-medium text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded-full">Milestone</span>
+                                <h4 class="font-bold text-slate-900 text-base mt-1">Graduation Trip (Penang)</h4>
+                            </div>
+                            <span class="font-bold text-teal-600 text-sm">RM 180 / RM 300</span>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex justify-between text-xs text-slate-500 mb-1">
+                                <span>Progress</span>
+                                <span class="font-semibold text-slate-700">60%</span>
+                            </div>
+                            <div class="w-full bg-slate-200 rounded-full h-2">
+                                <div class="bg-teal-600 h-2 rounded-full" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-200 flex justify-between items-center">
+                            <span class="text-xs text-slate-400">Target: Dec 2026</span>
+                            <button onclick="addGoalFunds('Graduation Trip', 50)" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-all flex items-center space-x-1">
+                                <i class="fa-solid fa-plus text-[10px]"></i><span>Add RM 50</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 4: IMPULSE PURCHASE PREVENTION ================= -->
+        <div id="tab-waitthink" class="tab-content space-y-6">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-navy-900 to-teal-800 text-white rounded-2xl p-6 shadow-xl">
+                <span class="bg-teal-500/30 text-teal-300 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">Behavioral Budgeting</span>
+                <h2 class="text-2xl font-bold mt-2">Wait-and-Think Tool 🛡️</h2>
+                <p class="text-slate-300 text-sm mt-1">About to buy trendy sneakers or online gadgets? Evaluate whether it's an essential need or an impulse buy before spending your allowance.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Calculator Input Form -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 lg:col-span-1">
+                    <h3 class="font-bold text-slate-900 mb-4">Evaluate Purchase</h3>
+                    <form id="wait-think-form" onsubmit="evaluatePurchase(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Item Name</label>
+                            <input type="text" id="wt-item" required placeholder="e.g. Trendy Sneakers, Gaming Mouse" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Price (RM)</label>
+                            <input type="number" step="0.10" id="wt-price" required placeholder="120.00" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Classification</label>
+                            <select id="wt-type" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                <option value="want">Want (Desire / Trend)</option>
+                                <option value="need">Need (Academic / Essential)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Self-Reflection Question</label>
+                            <p class="text-xs text-slate-400 mb-1">Do you already own 3 similar items or can this wait until next month?</p>
+                            <select id="wt-reflection" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                <option value="yes">Yes, I have similar items</option>
+                                <option value="no">No, this is unique / truly required</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-2.5 rounded-xl text-sm transition-all shadow-md flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-calculator"></i><span>Calculate Cooling-Off Verdict</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Verdict & Reflection Output Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 lg:col-span-2 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-900 mb-4">Smart Verdict & Cool-off Analysis</h3>
+                        <div id="wt-result-placeholder" class="text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                            <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fa-solid fa-shield-heart text-2xl"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-700 text-base">No item evaluated yet</h4>
+                            <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Fill in the item details on the left to analyze your purchase against your remaining budget (RM 214.50).</p>
+                        </div>
+
+                        <!-- Actual Result Box (Hidden by default) -->
+                        <div id="wt-result-box" class="hidden space-y-4">
+                            <div id="wt-verdict-banner" class="p-4 rounded-xl flex items-center space-x-4">
+                                <div id="wt-verdict-icon" class="text-3xl"></div>
+                                <div>
+                                    <h4 id="wt-verdict-title" class="font-bold text-base"></h4>
+                                    <p id="wt-verdict-subtitle" class="text-xs mt-0.5 opacity-90"></p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                    <span class="text-xs text-slate-400 block">Cooling-Off Period</span>
+                                    <span id="wt-cooldown" class="font-bold text-slate-800 text-sm mt-1 block">48 Hours</span>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                    <span class="text-xs text-slate-400 block">% of Allowance</span>
+                                    <span id="wt-allowance-pct" class="font-bold text-slate-800 text-sm mt-1 block">20.0%</span>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                    <span class="text-xs text-slate-400 block">Mamak Equivalent</span>
+                                    <span id="wt-mamak-eq" class="font-bold text-slate-800 text-sm mt-1 block">15 Teh Tariks</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-teal-50 border border-teal-200 rounded-xl p-4 text-xs text-teal-900 leading-relaxed">
+                                <strong class="block mb-1 font-bold"><i class="fa-solid fa-robot mr-1"></i> AI Behavioral Tip:</strong>
+                                <span id="wt-advice-text"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="wt-action-btns" class="hidden mt-6 pt-4 border-t border-slate-100 flex gap-3">
+                        <button onclick="postponePurchase()" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white text-xs font-medium py-2.5 rounded-xl transition-all shadow-sm">
+                            <i class="fa-solid fa-clock mr-1"></i> Pause for 48 Hours
+                        </button>
+                        <button onclick="saveToSavingsInstead()" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white text-xs font-medium py-2.5 rounded-xl transition-all shadow-sm">
+                            <i class="fa-solid fa-piggy-bank mr-1"></i> Save Money Instead
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 5: AI FINANCIAL ADVISOR CHAT ================= -->
+        <div id="tab-advisor" class="tab-content space-y-6">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-teal-900 to-navy-900 text-white rounded-2xl p-6 shadow-xl">
+                <span class="bg-teal-500/30 text-teal-300 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">24/7 Smart Companion</span>
+                <h2 class="text-2xl font-bold mt-2">AI Financial Advisor Chat 🤖</h2>
+                <p class="text-slate-300 text-sm mt-1">Chat with your personalized Malaysian student finance assistant for budgeting advice in RM, meal planning tips, and savings strategies.</p>
+            </div>
+
+            <!-- Feature 6: Chat Interface -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col h-[550px]">
+                <!-- Chat Header -->
+                <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50 rounded-t-2xl">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold shadow">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">FinSmart AI Advisor</h4>
+                            <span class="text-xs text-emerald-600 flex items-center font-medium">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1.5 animate-pulse"></span> Online & Analyzing your RM 214.50 balance
+                            </span>
+                        </div>
+                    </div>
+                    <button onclick="clearChat()" class="text-xs text-slate-400 hover:text-slate-600 px-3 py-1 bg-white border border-slate-200 rounded-lg shadow-sm">
+                        Clear Chat
+                    </button>
+                </div>
+
+                <!-- Message Bubbles Container -->
+                <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-4 bg-slate-50/50 text-sm">
+                    <!-- Initial AI greeting -->
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                            AI
+                        </div>
+                        <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-4 text-slate-800 shadow-sm max-w-xl leading-relaxed">
+                            <p>Hi Aiman! Based on your current spending of <strong class="text-teal-700">RM 385.50</strong> out of your <strong class="text-teal-700">RM 600</strong> allowance, you have <strong class="text-teal-700">RM 214.50</strong> left for the next 12 days (~RM 17.80/day).</p>
+                            <p class="mt-2">You're doing great, but watch out for weekend cafe outings. How can I help you optimize your budget today?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick-Reply Suggestion Chips -->
+                <div class="px-4 py-2 bg-white border-t border-slate-100 flex gap-2 overflow-x-auto">
+                    <button onclick="sendQuickReply('How can I stretch my remaining RM 214.50 for 12 days?')" class="bg-teal-50 hover:bg-teal-100 text-teal-700 text-xs font-medium px-3 py-1.5 rounded-full whitespace-nowrap transition-colors border border-teal-200">
+                        💡 Stretch my RM 214.50 budget
+                    </button>
+                    <button onclick="sendQuickReply('Give me cheap student meal ideas around campus')" class="bg-teal-50 hover:bg-teal-100 text-teal-700 text-xs font-medium px-3 py-1.5 rounded-full whitespace-nowrap transition-colors border border-teal-200">
+                        🍛 Cheap campus food ideas
+                    </button>
+                    <button onclick="sendQuickReply('How much should I save from my PTPTN loan?')" class="bg-teal-50 hover:bg-teal-100 text-teal-700 text-xs font-medium px-3 py-1.5 rounded-full whitespace-nowrap transition-colors border border-teal-200">
+                        💰 PTPTN saving tips
+                    </button>
+                </div>
+
+                <!-- Chat Input Form -->
+                <form id="chat-form" onsubmit="handleChatSubmit(event)" class="p-3 bg-white border-t border-slate-200 rounded-b-2xl flex items-center space-x-2">
+                    <input type="text" id="chat-input" placeholder="Ask about saving in RM, food tips, or budgeting..." class="flex-grow bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white w-10 h-10 rounded-xl flex items-center justify-center transition-all shadow-md shrink-0">
+                        <i class="fa-solid fa-paper-plane text-sm"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Add Transaction Modal -->
+    <div id="add-transaction-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative animate-in fade-in zoom-in duration-200">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-slate-900 text-lg">Add New Transaction</h3>
+                <button onclick="closeAddTransactionModal()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="saveNewTransaction(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Description / Merchant</label>
+                    <input type="text" id="new-desc" required placeholder="e.g. Printing notes, KFC meal" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Category</label>
+                    <select id="new-cat" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="Food & Dining">Food & Dining</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Academic">Academic / Books</option>
+                        <option value="Utilities">Utilities & Phone</option>
+                        <option value="Entertainment">Entertainment</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Amount (RM)</label>
+                    <input type="number" step="0.10" id="new-amount" required placeholder="15.00" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Date</label>
+                    <input type="text" id="new-date" value="Today, 2:30 PM" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div class="pt-3 flex gap-3">
+                    <button type="button" onclick="closeAddTransactionModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium py-2.5 rounded-xl transition-all">Cancel</button>
+                    <button type="submit" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium py-2.5 rounded-xl transition-all shadow-md">Save Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-navy-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center space-x-3 border border-teal-500/30">
+        <div id="toast-icon" class="text-teal-400">
+            <i class="fa-solid fa-circle-check text-lg"></i>
+        </div>
+        <div>
+            <h5 id="toast-title" class="font-bold text-xs uppercase tracking-wider text-teal-400">Success</h5>
+            <p id="toast-msg" class="text-sm text-slate-200"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-navy-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p>&copy; 2026 FinSmart Student Platform. Built for Malaysian University Students (UM, UKM, UTM, USM, UiTM).</p>
+            <p class="text-slate-500">Promoting responsible budgeting, student savings, and smart spending in Malaysian Ringgit (RM).</p>
+        </div>
+    </footer>
+
+    <script>
+        // Application State Data
+        let appData = {
+            allowance: 600.00,
+            spent: 385.50,
+            transactions: [
+                { id: 1, desc: 'Mamak Stall (Nasi Goreng + Ais Kosong)', category: 'Food & Dining', date: 'Yesterday, 8:30 PM', amount: 8.50 },
+                { id: 2, desc: 'RapidKL Monthly Concession Pass', category: 'Transport', date: 'Oct 1, 2026', amount: 50.00 },
+                { id: 3, desc: 'Campus Coop (Printing Thesis Chapters)', category: 'Academic', date: 'Oct 4, 2026', amount: 22.00 },
+                { id: 4, desc: 'Tealive Boba Tea with Friends', category: 'Food & Dining', date: 'Oct 6, 2026', amount: 9.50 },
+                { id: 5, desc: 'CelcomDigi Student Prepaid Reload', category: 'Utilities', date: 'Oct 8, 2026', amount: 30.00 }
+            ]
+        };
+
+        // Tab Switcher
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-teal-600', 'text-white');
+                btn.classList.add('text-slate-300', 'hover:bg-slate-800', 'hover:text-white');
+            });
+
+            document.getElementById('tab-' + tabId).classList.add('active');
+            const activeNav = document.getElementById('nav-' + tabId);
+            if (activeNav) {
+                activeNav.classList.remove('text-slate-300', 'hover:bg-slate-800', 'hover:text-white');
+                activeNav.classList.add('bg-teal-600', 'text-white');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Render Dashboard Statistics & Transactions
+        function updateDashboard() {
+            const remaining = appData.allowance - appData.spent;
+            const spentPct = Math.min(100, (appData.spent / appData.allowance) * 100).toFixed(1);
+
+            document.getElementById('stat-allowance').innerText = `RM ${appData.allowance.toFixed(2)}`;
+            document.getElementById('stat-spent').innerText = `RM ${appData.spent.toFixed(2)}`;
+            document.getElementById('stat-spent-percent').innerText = `${spentPct}% spent`;
+            document.getElementById('stat-remaining').innerText = `RM ${remaining.toFixed(2)}`;
+            document.getElementById('spent-progress-bar').style.width = `${spentPct}%`;
+
+            renderTransactions(appData.transactions);
+        }
+
+        function renderTransactions(list) {
+            const tbody = document.getElementById('transaction-table-body');
+            tbody.innerHTML = '';
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">No transactions found</td></tr>`;
+                return;
+            }
+
+            list.forEach(tx => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50/80 transition-colors';
+                tr.innerHTML = `
+                    <td class="py-3 px-3 font-medium text-slate-800">${tx.desc}</td>
+                    <td class="py-3 px-3"><span class="bg-teal-50 text-teal-700 text-xs px-2.5 py-1 rounded-full font-medium">${tx.category}</span></td>
+                    <td class="py-3 px-3 text-slate-500 text-xs">${tx.date}</td>
+                    <td class="py-3 px-3 text-right font-bold text-slate-900">-RM ${tx.amount.toFixed(2)}</td>
+                    <td class="py-3 px-3 text-center">
+                        <button onclick="deleteTransaction(${tx.id})" class="text-slate-400 hover:text-red-500 transition-colors p-1" title="Delete">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterTransactions() {
+            const query = document.getElementById('transaction-search').value.toLowerCase();
+            const filtered = appData.transactions.filter(t => 
+                t.desc.toLowerCase().includes(query) || t.category.toLowerCase().includes(query)
+            );
+            renderTransactions(filtered);
+        }
+
+        function openAddTransactionModal() {
+            document.getElementById('add-transaction-modal').classList.remove('hidden');
+        }
+
+        function closeAddTransactionModal() {
+            document.getElementById('add-transaction-modal').classList.add('hidden');
+        }
+
+        function saveNewTransaction(event) {
+            event.preventDefault();
+            const desc = document.getElementById('new-desc').value;
+            const cat = document.getElementById('new-cat').value;
+            const amount = parseFloat(document.getElementById('new-amount').value);
+            const date = document.getElementById('new-date').value;
+
+            const newTx = {
+                id: Date.now(),
+                desc,
+                category: cat,
+                date,
+                amount
+            };
+
+            appData.transactions.unshift(newTx);
+            appData.spent += amount;
+            updateDashboard();
+            closeAddTransactionModal();
+            showToast('Transaction added successfully!', 'Success');
+            document.getElementById('new-desc').value = '';
+            document.getElementById('new-amount').value = '';
+        }
+
+        function deleteTransaction(id) {
+            const index = appData.transactions.findIndex(t => t.id === id);
+            if (index !== -1) {
+                appData.spent -= appData.transactions[index].amount;
+                appData.transactions.splice(index, 1);
+                updateDashboard();
+                showToast('Transaction deleted', 'Info');
+            }
+        }
+
+        // Receipt Scanner OCR simulation
+        function loadSampleReceipt(type) {
+            const loader = document.getElementById('ocr-loader');
+            const statusText = document.getElementById('ocr-status-text');
+            const progressBar = document.getElementById('ocr-progress-bar');
+            
+            loader.classList.remove('hidden');
+            progressBar.style.width = '20%';
+            statusText.innerText = 'Uploading receipt image...';
+
+            setTimeout(() => {
+                progressBar.style.width = '60%';
+                statusText.innerText = 'Running AI OCR extraction...';
+            }, 600);
+
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+                statusText.innerText = 'OCR extraction complete!';
+                
+                setTimeout(() => {
+                    loader.classList.add('hidden');
+                    if (type === 'mamak') {
+                        setOcrOutput('Ali Nasi Kandar Bistari', 8.50, 'Food & Dining', [
+                            { name: 'Nasi Lemak Ayam Goreng', price: 7.00 },
+                            { name: 'Teh Tarik Ais', price: 1.50 }
+                        ]);
+                    } else if (type === 'bookstore') {
+                        setOcrOutput('UM Coop Bookstore', 14.20, 'Academic', [
+                            { name: 'A4 Campus Notebook (2-pack)', price: 9.00 },
+                            { name: 'Pilot Pen 0.5mm Black', price: 5.20 }
+                        ]);
+                    } else if (type === 'transport') {
+                        setOcrOutput('RapidKL LRT Reload', 30.00, 'Transport', [
+                            { name: 'Touch n Go / Concession Value Topup', price: 30.00 }
+                        ]);
+                    }
+                    showToast('Receipt successfully scanned by AI!', 'Success');
+                }, 400);
+            }, 1200);
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                loadSampleReceipt('mamak');
+            }
+        }
+
+        let currentScannedItem = { desc: 'Nasi Lemak Ayam Goreng & Teh Tarik', category: 'Food & Dining', amount: 8.50 };
+
+        function setOcrOutput(merchant, total, category, items) {
+            currentScannedItem = { desc: `${merchant} (${items[0].name})`, category, amount: total };
+            document.getElementById('ocr-merchant').innerText = merchant;
+            document.getElementById('ocr-total').innerText = `RM ${total.toFixed(2)}`;
+            document.getElementById('ocr-category').innerText = category;
+            
+            const listContainer = document.getElementById('ocr-items-list');
+            listContainer.innerHTML = '';
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between bg-white p-2 rounded border border-slate-100';
+                div.innerHTML = `<span>${item.name}</span><span class="font-medium">RM ${item.price.toFixed(2)}</span>`;
+                listContainer.appendChild(div);
+            });
+            document.getElementById('ocr-badge').className = 'bg-teal-100 text-teal-800 text-xs font-semibold px-2.5 py-0.5 rounded-full';
+            document.getElementById('ocr-badge').innerText = 'Verified Extracted';
+        }
+
+        function commitScannedExpense() {
+            appData.transactions.unshift({
+                id: Date.now(),
+                desc: currentScannedItem.desc,
+                category: currentScannedItem.category,
+                date: 'Today, Just now',
+                amount: currentScannedItem.amount
+            });
+            appData.spent += currentScannedItem.amount;
+            updateDashboard();
+            showToast(`Added RM ${currentScannedItem.amount.toFixed(2)} to your expenses!`, 'Success');
+            switchTab('dashboard');
+        }
+
+        // Student Discounts Perks
+        function claimPerk(perkName) {
+            showToast(`Perk claimed! Show your student ID / MyKad to redeem "${perkName}".`, 'Success');
+        }
+
+        function addGoalFunds(goalTitle, amount) {
+            showToast(`Added RM ${amount} to your savings goal: "${goalTitle}"! Keep it up!`, 'Success');
+        }
+
+        function openAddGoalModal() {
+            showToast('Savings goal creation modal opened', 'Info');
+        }
+
+        // Wait-and-Think Tool Logic
+        function evaluatePurchase(event) {
+            event.preventDefault();
+            const itemName = document.getElementById('wt-item').value;
+            const price = parseFloat(document.getElementById('wt-price').value);
+            const type = document.getElementById('wt-type').value;
+            const reflection = document.getElementById('wt-reflection').value;
+
+            document.getElementById('wt-result-placeholder').classList.add('hidden');
+            const resultBox = document.getElementById('wt-result-box');
+            resultBox.classList.remove('hidden');
+            document.getElementById('wt-action-btns').classList.remove('hidden');
+
+            const allowancePct = ((price / appData.allowance) * 100).toFixed(1);
+            const mamakEq = Math.round(price / 6.00);
+
+            const banner = document.getElementById('wt-verdict-banner');
+            const icon = document.getElementById('wt-verdict-icon');
+            const title = document.getElementById('wt-verdict-title');
+            const subtitle = document.getElementById('wt-verdict-subtitle');
+            const cooldown = document.getElementById('wt-cooldown');
+            const adviceText = document.getElementById('wt-advice-text');
+
+            document.getElementById('wt-allowance-pct').innerText = `${allowancePct}%`;
+            document.getElementById('wt-mamak-eq', mamakEq).innerText = `~${mamakEq} Mamak Meals`;
+
+            if (type === 'want' && (reflection === 'yes' || price > 50)) {
+                banner.className = 'p-4 rounded-xl flex items-center space-x-4 bg-amber-50 border border-amber-200 text-amber-900';
+                icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-600"></i>';
+                title.innerText = 'Impulse Buy Warning! ⚠️';
+                subtitle.innerText = `"${itemName}" represents ${allowancePct}% of your monthly allowance.`;
+                cooldown.innerText = '72 Hours Cool-off';
+                adviceText.innerText = `Since you marked this as a 'Want' and have similar items, waiting 72 hours prevents emotional spending of RM ${price.toFixed(2)}. That money could cover your transport for weeks!`;
+            } else if (type === 'need') {
+                banner.className = 'p-4 rounded-xl flex items-center space-x-4 bg-emerald-50 border border-emerald-200 text-emerald-900';
+                icon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600"></i>';
+                title.innerText = 'Approved Essential Need ✅';
+                subtitle.innerText = `"${itemName}" is classified as an academic/essential expense.`;
+                cooldown.innerText = 'Instant Approval';
+                adviceText.innerText = `This is a justified academic expense. Your remaining RM ${(appData.allowance - appData.spent).toFixed(2)} can comfortably cover this. Make sure to keep the receipt for your records!`;
+            } else {
+                banner.className = 'p-4 rounded-xl flex items-center space-x-4 bg-teal-50 border border-teal-200 text-teal-900';
+                icon.innerHTML = '<i class="fa-solid fa-circle-info text-teal-600"></i>';
+                title.innerText = 'Moderate Purchase 💡';
+                subtitle.innerText = `"${itemName}" is within reasonable bounds, but consider waiting 24 hours.`;
+                cooldown.innerText = '24 Hours';
+                adviceText.innerText = `Take a day to sleep on it. If you still feel you need "${itemName}" tomorrow, go ahead and purchase it using your remaining budget.`;
+            }
+        }
+
+        function postponePurchase() {
+            showToast('Cooling-off timer set! We will remind you in 48 hours.', 'Success');
+            switchTab('dashboard');
+        }
+
+        function saveToSavingsInstead() {
+            showToast('Smart choice! Redirected funds to your Laptop Fund savings goal.', 'Success');
+            switchTab('discounts');
+        }
+
+        // Chat Advisor Logic
+        function handleChatSubmit(event) {
+            event.preventDefault();
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            appendChatMessage(text, 'user');
+            input.value = '';
+
+            // Simulate typing indicator
+            setTimeout(() => {
+                generateAIResponse(text);
+            }, 800);
+        }
+
+        function sendQuickReply(text) {
+            appendChatMessage(text, 'user');
+            setTimeout(() => {
+                generateAIResponse(text);
+            }, 800);
+        }
+
+        function appendChatMessage(text, sender) {
+            const container = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            
+            if (sender === 'user') {
+                div.className = 'flex items-start justify-end space-x-3';
+                div.innerHTML = `
+                    <div class="bg-teal-600 text-white rounded-2xl rounded-tr-sm p-4 shadow-sm max-w-xl leading-relaxed">
+                        <p>${escapeHtml(text)}</p>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                        AI
+                    </div>
+                `;
+            } else {
+                div.className = 'flex items-start space-x-3';
+                div.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                        AI
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-4 text-slate-800 shadow-sm max-w-xl leading-relaxed">
+                        <p>${text}</p>
+                    </div>
+                `;
+            }
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function generateAIResponse(query) {
+            let response = "That's a great question regarding your student finances in Malaysia! With your current balance of RM 214.50, I recommend prioritizing campus cafeteria meals over commercial cafes and utilizing the RapidKL 50% concession pass to save on transport.";
+            
+            const q = query.toLowerCase();
+            if (q.includes('stretch') || q.includes('214') || q.includes('balance')) {
+                response = "To stretch your remaining <strong>RM 214.50</strong> over the next 12 days, your daily budget is exactly <strong>RM 17.87</strong>. Here is a quick strategy:<br>• Breakfast: Campus kiosk oat/bread (~RM 3)<br>• Lunch/Dinner: Economy rice (Nasi Campur) with chicken and vegetables at the university cafe (~RM 7 each)<br>• Total daily food: ~RM 17, leaving a tiny buffer for printing!";
+            } else if (q.includes('cheap') || q.includes('food') || q.includes('meal')) {
+                response = "Here are the best budget student meal hacks in Malaysia:<br>1. <strong>University Kafe / Dewan Seri</strong>: Stick to Nasi Campur (rice, egg/chicken, vege) which costs around RM 6-8.<br>2. <strong>Mamak Stall</strong>: Opt for Maggi Goreng kosong or Roti Canai for breakfast (~RM 2.50 - RM 4.50).<br>3. <strong>Water bottle</strong>: Always carry your own tumbler instead of buying bottled mineral water or canned drinks!";
+            } else if (q.includes('ptptn') || q.includes('save') || q.includes('loan')) {
+                response = "Managing your PTPTN loan requires discipline since it has to last the whole semester (usually 4 to 5 months).<br>• As soon as the PTPTN disbursement arrives, immediately lock away 20% into your emergency savings goal (e.g., Laptop Fund).<br>• Divide the rest into strict monthly allowances of RM 600 max. Never touch your principal loan corpus for shopping or trends!";
+            }
+
+            appendChatMessage(response, 'ai');
+        }
+
+        function clearChat() {
+            const container = document.getElementById('chat-messages');
+            container.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">AI</div>
+                    <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-4 text-slate-800 shadow-sm max-w-xl leading-relaxed">
+                        <p>Chat history cleared. How can I assist you with your Malaysian student budget today?</p>
+                    </div>
+                </div>
+            `;
+            showToast('Chat history cleared', 'Info');
+        }
+
+        // Toast Notification Helper
+        function showToast(msg, type = 'Success') {
+            const toast = document.getElementById('toast');
+            const title = document.getElementById('toast-title');
+            const message = document.getElementById('toast-msg');
+            const icon = document.getElementById('toast-icon');
+
+            title.innerText = type;
+            message.innerText = msg;
+            
+            if (type === 'Success') {
+                icon.innerHTML = '<i class="fa-solid fa-circle-check text-lg text-teal-400"></i>';
+            } else {
+                icon.innerHTML = '<i class="fa-solid fa-circle-info text-lg text-teal-400"></i>';
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        // Initialize App on Load
+        window.onload = function() {
+            updateDashboard();
+        };
+    </script>
+</body>
+</html>
